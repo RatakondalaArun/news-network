@@ -1,0 +1,54 @@
+OrdererOrgs:
+  - Name: Orderer
+    Domain: example.com
+    EnableNodeOUs: true
+    Specs:
+      - Hostname: orderer
+        SANS:
+          - "localhost"
+          - "127.0.0.1"
+
+PeerOrgs:
+  - Name: Citizen # Public
+    Domain: citizen.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - "localhost"
+        - "127.0.0.1"
+    Users:
+      Count: 1
+
+  - Name: PCI #(Press Council of India)
+    Domain: pci.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - "localhost"
+        - "127.0.0.1"
+    Users:
+      Count: 1
+
+  - Name: ICMR # Indian Council of Medical Research
+    Domain: icmr.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - "localhost"
+        - "127.0.0.1"
+    Users:
+      Count: 1
+
+  - Name: MOH # Ministry of Health
+    Domain: moh.example.com
+    EnableNodeOUs: true
+    Template:
+      Count: 1
+      SANS:
+        - "localhost"
+        - "127.0.0.1"
+    Users:
+      Count: 1

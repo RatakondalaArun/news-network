@@ -1,0 +1,205 @@
+Organizations:
+  - &OrdererOrg
+    Name: OrdererOrg
+    ID: OrdererMSP
+    MSPDir: ./crypto-config/ordererOrganizations/example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Writers:
+        Type: Signature
+        Rule: "OR('OrdererMSP.member')"
+      Admins:
+        Type: Signature
+        Rule: "OR('OrdererMSP.admin')"
+
+    OrdererEndpoints:
+      - orderer.example.com:7050
+  - &Citizen
+    Name: CitizenMSP
+    ID: CitizenMSP
+    MSPDir: ./crypto-config/peerOrganizations/citizen.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('CitizenMSP.admin', 'CitizenMSP.peer', 'CitizenMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('CitizenMSP.admin', 'CitizenMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('CitizenMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('CitizenMSP.peer')"
+    AnchorPeers:
+      - Host: peer0.citizen.example.com
+        port: 7051
+
+  - &PCI # Press Council of India
+    Name: PCIMSP
+    ID: PCIMSP
+    MSPDir: ./crypto-config/peerOrganizations/pci.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('PCIMSP.admin', 'PCIMSP.peer', 'PCIMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('PCIMSP.admin', 'PCIMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('PCIMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('PCIMSP.peer')"
+    AnchorPeers:
+      - Host: peer0.pci.example.com
+        port: 7052
+
+  - &ICMR # Indian Council of Medical Research
+    Name: ICMRMSP
+    ID: ICMRMSP
+    MSPDir: ./crypto-config/peerOrganizations/icmr.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('ICMRMSP.admin', 'ICMRMSP.peer', 'ICMRMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('ICMRMSP.admin', 'ICMRMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('ICMRMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('ICMRMSP.peer')"
+    AnchorPeers:
+      - Host: peer0.icmr.example.com
+        port: 7053
+
+  - &MOH # Ministry of Health
+    Name: MOHMSP
+    ID: MOHMSP
+    MSPDir: ./crypto-config/peerOrganizations/moh.example.com/msp
+    Policies:
+      Readers:
+        Type: Signature
+        Rule: "OR('MOHMSP.admin', 'MOHMSP.peer', 'MOHMSP.client')"
+      Writers:
+        Type: Signature
+        Rule: "OR('MOHMSP.admin', 'MOHMSP.client')"
+      Admins:
+        Type: Signature
+        Rule: "OR('MOHMSP.admin')"
+      Endorsement:
+        Type: Signature
+        Rule: "OR('MOHMSP.peer')"
+    AnchorPeers:
+      - Host: peer0.moh.example.com
+        port: 7054
+
+Capabilities:
+  Channel: &ChannelCapabilities
+    V2_0: true
+  Orderer: &OrdererCapabilities
+    V2_0: true
+  Application: &ApplicationCapabilities
+    V2_0: true
+
+Application: &ApplicationDefaults
+  Organizations:
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    LifecycleEndorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+    Endorsement:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Endorsement"
+
+  Capabilities:
+    <<: *ApplicationCapabilities
+
+Orderer: &OrdererDefaults
+  OrdererType: etcdraft
+  Addresses:
+    - orderer.example.com:7050
+  EtcdRaft:
+    Consenters:
+      - Host: orderer.example.com
+        Port: 7050
+        ClientTLSCert: ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+        ServerTLSCert: ./crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
+  BatchTimeout: 2s
+  BatchSize:
+    MaxMessageCount: 10
+    AbsoluteMaxBytes: 99 MB
+    PreferredMaxBytes: 512 KB
+  Organizations:
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+    BlockValidation:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+
+Channel: &ChannelDefaults
+  Policies:
+    Readers:
+      Type: ImplicitMeta
+      Rule: "ANY Readers"
+    Writers:
+      Type: ImplicitMeta
+      Rule: "ANY Writers"
+    Admins:
+      Type: ImplicitMeta
+      Rule: "MAJORITY Admins"
+  Capabilities:
+    <<: *ChannelCapabilities
+
+Profiles:
+  OrdererGenesis:
+    <<: *ChannelDefaults
+    Orderer:
+      <<: *OrdererDefaults
+      Organizations:
+        - *OrdererOrg
+      Capabilities:
+        <<: *OrdererCapabilities
+    Consortiums:
+      SimpleConsortium:
+        Organizations:
+          - *Citizen
+          - *PCI
+          - *ICMR
+          - *MOH
+
+  Channel:
+    Consortium: SimpleConsortium
+    <<: *ChannelDefaults
+    Application:
+      <<: *ApplicationDefaults
+      Organizations:
+        - *Citizen
+        - *PCI
+        - *ICMR
+        - *MOH
+      Capabilities:
+        <<: *ApplicationCapabilities
