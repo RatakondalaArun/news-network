@@ -1,8 +1,8 @@
 version: "2"
 
 networks:
-  test:
-    name: fabric-test
+  news-network:
+    name: news-network
 
 services:
   ca-citizen:
@@ -24,7 +24,7 @@ services:
     container_name: ca.citizen.example.com
     hostname: ca.citizen.example.com
     networks:
-      - test
+      - news-network
 
   ca-pci:
     image: hyperledger/fabric-ca:latest
@@ -45,7 +45,7 @@ services:
     container_name: ca.pci.example.com
     hostname: ca.pci.example.com
     networks:
-      - test
+      - news-network
 
   ca-icmr:
     image: hyperledger/fabric-ca:latest
@@ -66,7 +66,7 @@ services:
     container_name: ca.icmr.example.com
     hostname: ca.icmr.example.com
     networks:
-      - test
+      - news-network
 
   ca-moh:
     image: hyperledger/fabric-ca:latest
@@ -87,7 +87,7 @@ services:
     container_name: ca.moh.example.com
     hostname: ca.moh.example.com
     networks:
-      - test
+      - news-network
 
   orderer.example.com:
     container_name: orderer.example.com
@@ -118,7 +118,7 @@ services:
       - 7050:7050
       - 8443:8443
     networks:
-      - test
+      - news-network
     volumes:
       - ./channel/genesis.block:/var/hyperledger/orderer/genesis.block
       - ./channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp:/var/hyperledger/orderer/msp
@@ -133,7 +133,7 @@ services:
     ports:
       - 5984:5984
     networks:
-      - test
+      - news-network
 
   couchdb1:
     container_name: couchdb1
@@ -144,7 +144,7 @@ services:
     ports:
       - 6984:5984
     networks:
-      - test
+      - news-network
 
   couchdb2:
     container_name: couchdb2
@@ -155,7 +155,7 @@ services:
     ports:
       - 7984:5984
     networks:
-      - test
+      - news-network
 
   couchdb3:
     container_name: couchdb3
@@ -166,7 +166,7 @@ services:
     ports:
       - 8984:5984
     networks:
-      - test
+      - news-network
 
   peer0.citizen.example.com:
     container_name: peer0.citizen.example.com
@@ -178,7 +178,7 @@ services:
       - ORDERER_GENERAL_LOGLEVEL=info
       - CORE_PEER_LOCALMSPID=CitizenMSP
 
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=artifacts_test
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=news-network
 
       - CORE_PEER_ID=peer0.citizen.example.com
       - CORE_PEER_ADDRESS=peer0.citizen.example.com:7051
@@ -212,7 +212,7 @@ services:
       - /var/run/:/host/var/run/
       - ./channel/:/etc/hyperledger/channel/
     networks:
-      - test
+      - news-network
 
   peer0.pci.example.com:
     container_name: peer0.pci.example.com
@@ -224,7 +224,7 @@ services:
       - ORDERER_GENERAL_LOGLEVEL=info
       - CORE_PEER_LOCALMSPID=PCIMSP
 
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=artifacts_test
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=news-network
 
       - CORE_PEER_ID=peer0.pci.example.com
       - CORE_PEER_ADDRESS=peer0.pci.example.com:8051
@@ -256,7 +256,7 @@ services:
       - /var/run/:/host/var/run/
       - ./channel/:/etc/hyperledger/channel/
     networks:
-      - test
+      - news-network
 
   peer0.icmr.example.com:
     container_name: peer0.icmr.example.com
@@ -268,7 +268,7 @@ services:
       - ORDERER_GENERAL_LOGLEVEL=info
       - CORE_PEER_LOCALMSPID=ICMRMSP
 
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=artifacts_test
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=news-network
 
       - CORE_PEER_ID=peer0.icmr.example.com
       - CORE_PEER_ADDRESS=peer0.icmr.example.com:9051
@@ -300,7 +300,7 @@ services:
       - /var/run/:/host/var/run/
       - ./channel/:/etc/hyperledger/channel/
     networks:
-      - test
+      - news-network
 
   peer0.moh.example.com:
     container_name: peer0.moh.example.com
@@ -312,7 +312,7 @@ services:
       - ORDERER_GENERAL_LOGLEVEL=info
       - CORE_PEER_LOCALMSPID=MOHMSP
 
-      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=artifacts_test
+      - CORE_VM_DOCKER_HOSTCONFIG_NETWORKMODE=news-network
 
       - CORE_PEER_ID=peer0.moh.example.com
       - CORE_PEER_ADDRESS=peer0.moh.example.com:10051
@@ -344,4 +344,4 @@ services:
       - /var/run/:/host/var/run/
       - ./channel/:/etc/hyperledger/channel/
     networks:
-      - test
+      - news-network
