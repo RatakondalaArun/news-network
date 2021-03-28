@@ -1,6 +1,13 @@
 .todo
+
 # network configrations
 artifacts/channel/crypto-config/
 artifacts/channel/*.tx
 artifacts/channel/*.block
 channel-artifacts/
+
+# archives
+*.tar.gz
+
+# logs
+log.txt

@@ -1,7 +1,11 @@
 ROOT=$PWD
 
+echo "Removing log.txt file"
+rm log.txt
+rm newsnet.tar.gz
+
 echo -e "\n\n"
-echo "####################     Removing Docker containers     ##########################"
+echo "Removing Docker containers"
 
 # stop docker containers
 docker stop $(docker ps -a -q)
@@ -9,7 +13,7 @@ docker stop $(docker ps -a -q)
 docker rm $(docker ps -a -q)
 
 echo -e "\n\n"
-echo "####################     Removing network Files     ##########################"
+echo "Removing network Files"
 # navigate to channel folder
 cd ./artifacts/channel
 # remove crypto-config folder
