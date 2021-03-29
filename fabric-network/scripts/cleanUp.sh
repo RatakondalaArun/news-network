@@ -1,24 +1,37 @@
+# relative import to network.sh
+source scripts/utils.sh
+
 ROOT=$PWD
 
-echo "Removing log.txt file"
-rm log.txt
-rm newsnet.tar.gz
+# Obtain CONTAINER_IDS and remove them
+# This function is called when you bring a network down
+clearContainers() {
+    infoln "Removing remaining containers"
+    docker rm -f $(docker ps -aq --filter network=news-network) 2>/dev/null || true
+}
 
-echo -e "\n\n"
-echo "Removing Docker containers"
+# Delete any images that were generated as a part of this setup
+# specifically the following images are often left behind:
+# This function is called when you bring the network down
+removeUnwantedImages() {
+    infoln "Removing generated chaincode docker images"
+    docker image rm -f $(docker images -aq --filter reference='dev-peer*') 2>/dev/null || true
+}
 
-# stop docker containers
-docker stop $(docker ps -a -q)
-# remove docker containers
-docker rm $(docker ps -a -q)
+pruneVolumes() {
+    infoln "Removing all docker volumes"
+    docker volume prune -f
+}
 
-echo -e "\n\n"
-echo "Removing network Files"
-# navigate to channel folder
-cd ./artifacts/channel
-# remove crypto-config folder
-rm -r crypto-config
-# remove transaction files
-rm *.tx
-# remove genesis block
-rm genesis.block
+removeFiles() {
+    infoln "Removing network files"
+    rmFile log.txt newsnet.tar.gz
+    rmFile ./artifacts/channel/*.tx
+    rmFile ./artifacts/channel/genesis.block
+    rmDir ./artifacts/channel/crypto-config
+}
+
+clearContainers
+removeUnwantedImages
+removeFiles
+pruneVolumes

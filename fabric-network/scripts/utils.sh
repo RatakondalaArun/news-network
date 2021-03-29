@@ -152,8 +152,36 @@ function stepln() {
     println "${ON_GREEN}${1}${C_RESET}"
 }
 
+# Removes files
+rmFile() {
+    files=$@
+    for file in $files; do
+        if [ -f "$file" ]; then
+            rm $file
+            successln "File \"$file\" removed"
+        else
+            infoln "File \"$file\" Not found"
+        fi
+    done
+}
+
+# Removes Directories
+rmDir() {
+    dirs=$@
+    for dir in $dirs; do
+        if [ -d "$dir" ]; then
+            rm -R $dir
+            successln "Dir \"$dir\" removed"
+        else
+            infoln "Dir \"$file\" Not found"
+        fi
+    done
+}
+
 export -f errorln
 export -f successln
 export -f infoln
 export -f warnln
 export -f stepln
+export -f rmFile
+export -f rmDir

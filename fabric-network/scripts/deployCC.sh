@@ -295,5 +295,3 @@ if [ "$CC_INIT_FCN" = "NA" ]; then
 else
     chaincodeInvokeInit Citizen PCI ICMR MOH
 fi
-
-exit 0

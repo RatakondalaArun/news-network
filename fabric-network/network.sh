@@ -39,12 +39,18 @@ networkUp() {
     . ./scripts/deployCC.sh $CHANNEL_NAME $CC_NAME $CC_SRC_PATH $CC_SRC_LANGUAGE $CC_VERSION $CC_SEQUENCE $CC_INIT_FCN $CC_END_POLICY $CC_COLL_CONFIG $CLI_DELAY $MAX_RETRY $VERBOSE
     verifyResult $? "Chaincode deployment failed"
 
+    infoln "Containers List"
+
+    docker ps -f network=news-network --format "table {{.ID}}\t{{.Status}}\t{{.Ports}}\t{{.Names}}"
+
     infoln '############## 🚀Success👩‍🚀 #################'
     infoln "💾couchdb instances"
-    infoln -e 'Citizen\t http://localhost:5984/_utils/'
-    infoln -e 'PCI\t http://localhost:6984/_utils/'
-    infoln -e 'ICMR\t http://localhost:7984/_utils/'
-    infoln -e 'MOH\t http://localhost:8984/_utils/'
+    infoln "Citizen    http://localhost:5984/_utils/"
+    infoln "PCI        http://localhost:6984/_utils/"
+    infoln "ICMR       http://localhost:7984/_utils/"
+    infoln "MOH        http://localhost:8984/_utils/"
+
+    exit 0
 }
 
 networkDown() {
