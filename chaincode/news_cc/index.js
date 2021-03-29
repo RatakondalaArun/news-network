@@ -1,12 +1,34 @@
 const { Contract, Context } = require("fabric-contract-api");
+const { Artical } = require("./src/models/article");
 
 class NewsContract extends Contract {
   constructor() {
     super("NewsContract");
   }
 
-  async initLedger(cxt) {
-    console.info("Chaincode initilized", cxt);
+  /**
+   *
+   * @param {Context} context
+   */
+  async initLedger(context) {
+    console.info("Chaincode initilized", context);
+    const articals = [1, 2, 3, 4, 5].map(
+      (value) =>
+        new Artical({
+          id: `id_${value}`,
+          title: `This is Article ${value}`,
+          content: `This article body ${value}`,
+          score: 0,
+        })
+    );
+    for (const article of articals) {
+      try {
+        await context.stub.putState(article.id, Buffer.from(article.toJson()));
+      } catch (error) {
+        console.error(`Error while puting article`, article);
+        console.error(error);
+      }
+    }
   }
 
   /**
