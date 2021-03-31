@@ -5,8 +5,24 @@ networks:
     name: news-network
 
 services:
+  ca_orderer:
+    image: hyperledger/fabric-ca:latest
+    environment:
+      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
+      - FABRIC_CA_SERVER_CA_NAME=ca-orderer
+      - FABRIC_CA_SERVER_TLS_ENABLED=true
+      - FABRIC_CA_SERVER_PORT=6054
+    ports:
+      - "6054:6054"
+    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
+    volumes:
+      - ./fabric-ca/ordererOrg:/etc/hyperledger/fabric-ca-server
+    container_name: ca.orderer.example.com
+    networks:
+      - news-network
+
   ca_citizen:
-    image: hyperledger/fabric-ca
+    image: hyperledger/fabric-ca:latest
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca.citizen.example.com
@@ -23,7 +39,7 @@ services:
       - news-network
 
   ca_pci:
-    image: hyperledger/fabric-ca
+    image: hyperledger/fabric-ca:latest
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca.pci.example.com
@@ -40,14 +56,14 @@ services:
       - news-network
 
   ca_icmr:
-    image: hyperledger/fabric-ca
+    image: hyperledger/fabric-ca:latest
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca.icmr.example.com
       - FABRIC_CA_SERVER_TLS_ENABLED=true
-      - FABRIC_CA_SERVER_PORT=10054
+      - FABRIC_CA_SERVER_PORT=9054
     ports:
-      - "10054:10054"
+      - "9054:9054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
       - ./fabric-ca/icmr:/etc/hyperledger/fabric-ca-server
@@ -57,34 +73,18 @@ services:
       - news-network
 
   ca_moh:
-    image: hyperledger/fabric-ca
+    image: hyperledger/fabric-ca:latest
     environment:
       - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
       - FABRIC_CA_SERVER_CA_NAME=ca.moh.example.com
       - FABRIC_CA_SERVER_TLS_ENABLED=true
-      - FABRIC_CA_SERVER_PORT=11054
+      - FABRIC_CA_SERVER_PORT=10054
     ports:
-      - "11054:11054"
+      - "10054:10054"
     command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
     volumes:
       - ./fabric-ca/moh:/etc/hyperledger/fabric-ca-server
     container_name: ca.moh.example.com
     hostname: ca.moh.example.com
-    networks:
-      - news-network
-
-  ca_orderer:
-    image: hyperledger/fabric-ca
-    environment:
-      - FABRIC_CA_HOME=/etc/hyperledger/fabric-ca-server
-      - FABRIC_CA_SERVER_CA_NAME=ca-orderer
-      - FABRIC_CA_SERVER_TLS_ENABLED=true
-      - FABRIC_CA_SERVER_PORT=9054
-    ports:
-      - "9054:9054"
-    command: sh -c 'fabric-ca-server start -b admin:adminpw -d'
-    volumes:
-      - ./fabric-ca/ordererOrg:/etc/hyperledger/fabric-ca-server
-    container_name: ca_orderer
     networks:
       - news-network

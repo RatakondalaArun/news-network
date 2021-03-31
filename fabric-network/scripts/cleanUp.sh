@@ -29,6 +29,7 @@ removeFiles() {
     rmFile ./artifacts/channel/*.tx
     rmFile ./artifacts/channel/genesis.block
     rmDir ./artifacts/channel/crypto-config
+    rmDir ./artifacts/channel/create-ca/fabric-ca
 }
 
 clearContainers

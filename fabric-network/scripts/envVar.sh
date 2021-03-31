@@ -57,13 +57,13 @@ setGlobalsCLI() {
         USING_ORG="${OVERRIDE_ORG}"
     fi
 
-    if [ $USING_ORG == "Citizen" ]; then
+    if [ $USING_ORG = "Citizen" ]; then
         export CORE_PEER_ADDRESS=peer0.citizen.example.com:7051
-    elif [ $USING_ORG == "PCI" ]; then
+    elif [ $USING_ORG = "PCI" ]; then
         export CORE_PEER_ADDRESS=peer0.pci.example.com:8051
-    elif [ $USING_ORG == "ICMR" ]; then
+    elif [ $USING_ORG = "ICMR" ]; then
         export CORE_PEER_ADDRESS=peer0.icmr.example.com:9051
-    elif [ $USING_ORG == "MOH" ]; then
+    elif [ $USING_ORG = "MOH" ]; then
         export CORE_PEER_ADDRESS=peer0.moh.example.com:10051
     else
         errorln "ORG Unknown"

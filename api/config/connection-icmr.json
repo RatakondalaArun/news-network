@@ -1,0 +1,49 @@
+{
+  "name": "first-network-{ORG}",
+  "version": "1.0.0",
+  "client": {
+    "organization": "icmr",
+    "connection": {
+      "timeout": {
+        "peer": {
+          "endorser": "300"
+        }
+      }
+    }
+  },
+  "organizations": {
+    "icmr": {
+      "mspid": "icmrMSP",
+      "peers": [
+        "peer0.icmr.example.com"
+      ],
+      "certificateAuthorities": [
+        "ca.icmr.example.com"
+      ]
+    }
+  },
+  "peers": {
+    "peer0.icmr.example.com": {
+      "url": "grpcs://localhost:9051",
+      "tlsCACerts": {
+        "pem": ""
+      },
+      "grpcOptions": {
+        "ssl-target-name-override": "peer0.icmr.example.com",
+        "hostnameOverride": "peer0.icmr.example.com"
+      }
+    }
+  },
+  "certificateAuthorities": {
+    "ca.orgicmr.example.com": {
+      "url": "https://localhost:9054",
+      "caName": "ca.icmr.example.com",
+      "tlsCACerts": {
+        "pem": ""
+      },
+      "httpOptions": {
+        "verify": false
+      }
+    }
+  }
+}

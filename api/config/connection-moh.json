@@ -1,0 +1,49 @@
+{
+  "name": "first-network-{ORG}",
+  "version": "1.0.0",
+  "client": {
+    "organization": "moh",
+    "connection": {
+      "timeout": {
+        "peer": {
+          "endorser": "300"
+        }
+      }
+    }
+  },
+  "organizations": {
+    "moh": {
+      "mspid": "mohMSP",
+      "peers": [
+        "peer0.moh.example.com"
+      ],
+      "certificateAuthorities": [
+        "ca.moh.example.com"
+      ]
+    }
+  },
+  "peers": {
+    "peer0.moh.example.com": {
+      "url": "grpcs://localhost:10051",
+      "tlsCACerts": {
+        "pem": ""
+      },
+      "grpcOptions": {
+        "ssl-target-name-override": "peer0.moh.example.com",
+        "hostnameOverride": "peer0.moh.example.com"
+      }
+    }
+  },
+  "certificateAuthorities": {
+    "ca.orgmoh.example.com": {
+      "url": "https://localhost:10054",
+      "caName": "ca.moh.example.com",
+      "tlsCACerts": {
+        "pem": ""
+      },
+      "httpOptions": {
+        "verify": false
+      }
+    }
+  }
+}

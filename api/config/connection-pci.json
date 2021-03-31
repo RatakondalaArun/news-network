@@ -1,0 +1,49 @@
+{
+  "name": "first-network-{ORG}",
+  "version": "1.0.0",
+  "client": {
+    "organization": "pci",
+    "connection": {
+      "timeout": {
+        "peer": {
+          "endorser": "300"
+        }
+      }
+    }
+  },
+  "organizations": {
+    "pci": {
+      "mspid": "pciMSP",
+      "peers": [
+        "peer0.pci.example.com"
+      ],
+      "certificateAuthorities": [
+        "ca.pci.example.com"
+      ]
+    }
+  },
+  "peers": {
+    "peer0.pci.example.com": {
+      "url": "grpcs://localhost:8051",
+      "tlsCACerts": {
+        "pem": ""
+      },
+      "grpcOptions": {
+        "ssl-target-name-override": "peer0.pci.example.com",
+        "hostnameOverride": "peer0.pci.example.com"
+      }
+    }
+  },
+  "certificateAuthorities": {
+    "ca.orgpci.example.com": {
+      "url": "https://localhost:8054",
+      "caName": "ca.pci.example.com",
+      "tlsCACerts": {
+        "pem": ""
+      },
+      "httpOptions": {
+        "verify": false
+      }
+    }
+  }
+}

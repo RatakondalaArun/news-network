@@ -1,0 +1,49 @@
+{
+  "name": "first-network-{ORG}",
+  "version": "1.0.0",
+  "client": {
+    "organization": "citizen",
+    "connection": {
+      "timeout": {
+        "peer": {
+          "endorser": "300"
+        }
+      }
+    }
+  },
+  "organizations": {
+    "citizen": {
+      "mspid": "citizenMSP",
+      "peers": [
+        "peer0.citizen.example.com"
+      ],
+      "certificateAuthorities": [
+        "ca.citizen.example.com"
+      ]
+    }
+  },
+  "peers": {
+    "peer0.citizen.example.com": {
+      "url": "grpcs://localhost:7051",
+      "tlsCACerts": {
+        "pem": ""
+      },
+      "grpcOptions": {
+        "ssl-target-name-override": "peer0.citizen.example.com",
+        "hostnameOverride": "peer0.citizen.example.com"
+      }
+    }
+  },
+  "certificateAuthorities": {
+    "ca.orgcitizen.example.com": {
+      "url": "https://localhost:7054",
+      "caName": "ca.citizen.example.com",
+      "tlsCACerts": {
+        "pem": ""
+      },
+      "httpOptions": {
+        "verify": false
+      }
+    }
+  }
+}

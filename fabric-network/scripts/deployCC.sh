@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-source utils.sh
+source scripts/utils.sh
+source scripts/envVar.sh
 
 CHANNEL_NAME=${1:-"mainchannel"}
 CC_NAME=${2}
@@ -51,7 +52,7 @@ else
 fi
 
 # import utils
-. envVar.sh
+# . scripts/envVar.sh
 
 packageChaincode() {
     set -x
@@ -118,11 +119,13 @@ checkCommitReadiness() {
         sleep $DELAY
         infoln "Attempting to check the commit readiness of the chaincode definition on peer0.${ORG}, Retry after $DELAY seconds."
         set -x
-        peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${CC_VERSION} --sequence ${CC_SEQUENCE} ${INIT_REQUIRED} ${CC_END_POLICY} ${CC_COLL_CONFIG} --output json >&log.txt
+        peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME --signature-policy "AND(OR('${ORG}MSP.peer','${ORG}MSP.peer','${ORG}MSP.peer'), 'auditor.peer')" --name ${CC_NAME} --version ${CC_VERSION} --sequence ${CC_SEQUENCE} ${INIT_REQUIRED} ${CC_END_POLICY} ${CC_COLL_CONFIG} --output json >&log.txt
         res=$?
         { set +x; } 2>/dev/null
         let rc=0
+        echo "$@"
         for var in "$@"; do
+            echo "$var"
             grep "$var" log.txt &>/dev/null || let rc=1
         done
         COUNTER=$(expr $COUNTER + 1)

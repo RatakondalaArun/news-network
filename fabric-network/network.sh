@@ -3,9 +3,26 @@
 source scripts/utils.sh
 source scripts/envVar.sh
 
+set -e
+
 ROOT=$PWD
 
 networkUp() {
+    infoln "Bringing down previous network"
+    networkDown
+
+    infoln "Creating CA Containers" # bring up ca containers
+    cd artifacts/channel/create-ca
+    docker-compose up -d
+    verifyResult $? "CA Container creation failed"
+    sleep 5s
+
+    # create certifacts
+    infoln "Creating CA Certificates"
+    . ./create-ca-cert.sh
+    verifyResult $? "CA Certificates Creation failed"
+    cd $ROOT
+
     # creates required artifacts
     infoln 'Creating Artifacts'
     cd artifacts/channel/

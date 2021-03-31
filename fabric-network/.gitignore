@@ -4,7 +4,7 @@
 artifacts/channel/crypto-config/
 artifacts/channel/*.tx
 artifacts/channel/*.block
-artifacts/channel/create-certificate-with-ca/fabric-ca
+artifacts/channel/create-ca/fabric-ca
 channel-artifacts/
 
 # archives
@@ -12,3 +12,4 @@ channel-artifacts/
 
 # logs
 log.txt
+ports.txt

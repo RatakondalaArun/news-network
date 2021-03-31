@@ -1,3 +1,8 @@
+# imports
+source scripts/utils.sh
+
+set -e
+
 export CORE_PEER_TLS_ENABLED=true
 export ORDERER_CA=${PWD}/artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
 export PEER0_CITIZEN_CA=${PWD}/artifacts/channel/crypto-config/peerOrganizations/citizen.example.com/peers/peer0.citizen.example.com/tls/ca.crt
@@ -43,8 +48,10 @@ setGlobalsForPeer0MOH() {
 }
 
 createChannel() {
+    infoln "Removing previous channel artifacts"
     rm -rf ./channel-artifacts/*
 
+    infoln "Creating channel"
     setGlobalsForPeer0Citizen
 
     peer channel create -o localhost:7050 -c $CHANNEL_NAME \
@@ -55,36 +62,59 @@ createChannel() {
 }
 
 joinChannel() {
+    infoln "Joining Citizen peer0"
     setGlobalsForPeer0Citizen
     peer channel join -b ./channel-artifacts/$CHANNEL_NAME.block
+    verifyResult $? "Joining Citizen peer0 failed"
 
+    infoln "Joining PCI peer0"
     setGlobalsForPeer0PCI
     peer channel join -b ./channel-artifacts/$CHANNEL_NAME.block
+    verifyResult $? "Joining PCI peer0 failed"
 
+    infoln "Joining ICMR peer0"
     setGlobalsForPeer0ICMR
     peer channel join -b ./channel-artifacts/$CHANNEL_NAME.block
+    verifyResult $? "Joining ICMR peer0 failed"
 
+    infoln "Joining MOH peer0"
     setGlobalsForPeer0MOH
     peer channel join -b ./channel-artifacts/$CHANNEL_NAME.block
+    verifyResult $? "Joining MOH peer0 failed"
 
 }
 
 updateAnchorPeers() {
+    infoln "Updating Citizen peer0"
     setGlobalsForPeer0Citizen
     peer channel update -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com -c $CHANNEL_NAME -f ./artifacts/channel/${CORE_PEER_LOCALMSPID}anchors.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA
+    verifyResult $? "Updating Citizen peer0 failed"
 
+    infoln "Updating Citizen peer0"
     setGlobalsForPeer0PCI
     peer channel update -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com -c $CHANNEL_NAME -f ./artifacts/channel/${CORE_PEER_LOCALMSPID}anchors.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA
+    verifyResult $? "Updating PCI peer0 failed"
 
+    infoln "Updating ICMR peer0"
     setGlobalsForPeer0ICMR
     peer channel update -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com -c $CHANNEL_NAME -f ./artifacts/channel/${CORE_PEER_LOCALMSPID}anchors.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA
+    verifyResult $? "Updating ICMR peer0 failed"
 
+    infoln "Updating MOH peer0"
     setGlobalsForPeer0MOH
     peer channel update -o localhost:7050 --ordererTLSHostnameOverride orderer.example.com -c $CHANNEL_NAME -f ./artifacts/channel/${CORE_PEER_LOCALMSPID}anchors.tx --tls $CORE_PEER_TLS_ENABLED --cafile $ORDERER_CA
+    verifyResult $? "Updating MOH peer0 failed"
 }
-echo '############## 🏃‍♀️🏃‍♂️ Creating Channel #################'
+infoln "🏃‍♀️🏃‍♂️ Creating Channel"
 createChannel
-echo '############## 🏃‍♀️🏃‍♂️ Joining Channel #################'
+verifyResult $? "Channel creation Failed"
+
+echo "🏃‍♀️🏃‍♂️ Joining Channel"
 joinChannel
-echo '############## 🏃‍♀️🏃‍♂️ Updating Anchor peers #################'
+verifyResult $? "Joining Channel Failed"
+
+echo "🏃‍♀️🏃‍♂️ Updating Anchor peers"
 updateAnchorPeers
+verifyResult $? "Updating Anchor peers Failed"
+
+successln "Channel Creation Success"

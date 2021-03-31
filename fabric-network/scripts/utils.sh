@@ -154,7 +154,7 @@ function stepln() {
 
 # Removes files
 rmFile() {
-    files=$@
+    local files=$@
     for file in $files; do
         if [ -f "$file" ]; then
             rm $file
@@ -167,13 +167,13 @@ rmFile() {
 
 # Removes Directories
 rmDir() {
-    dirs=$@
+    local dirs=$@
     for dir in $dirs; do
         if [ -d "$dir" ]; then
             rm -R $dir
             successln "Dir \"$dir\" removed"
         else
-            infoln "Dir \"$file\" Not found"
+            infoln "Dir \"$dir\" Not found"
         fi
     done
 }
