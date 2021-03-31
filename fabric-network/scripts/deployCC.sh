@@ -119,7 +119,7 @@ checkCommitReadiness() {
         sleep $DELAY
         infoln "Attempting to check the commit readiness of the chaincode definition on peer0.${ORG}, Retry after $DELAY seconds."
         set -x
-        peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME --signature-policy "AND(OR('${ORG}MSP.peer','${ORG}MSP.peer','${ORG}MSP.peer'), 'auditor.peer')" --name ${CC_NAME} --version ${CC_VERSION} --sequence ${CC_SEQUENCE} ${INIT_REQUIRED} ${CC_END_POLICY} ${CC_COLL_CONFIG} --output json >&log.txt
+        peer lifecycle chaincode checkcommitreadiness --channelID $CHANNEL_NAME --name ${CC_NAME} --version ${CC_VERSION} --sequence ${CC_SEQUENCE} ${INIT_REQUIRED} ${CC_END_POLICY} ${CC_COLL_CONFIG} --output json >&log.txt
         res=$?
         { set +x; } 2>/dev/null
         let rc=0

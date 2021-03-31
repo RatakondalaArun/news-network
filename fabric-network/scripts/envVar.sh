@@ -8,7 +8,6 @@
 # This is a collection of bash functions used by different scripts
 
 # imports
-source scripts/utils.sh
 
 export CORE_PEER_TLS_ENABLED=true
 export ORDERER_CA=${PWD}/artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/msp/tlscacerts/tlsca.example.com-cert.pem
@@ -19,6 +18,8 @@ export PEER0_MOH_CA=${PWD}/artifacts/channel/crypto-config/peerOrganizations/moh
 export ORDERER_ADMIN_TLS_SIGN_CERT=${PWD}/artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.crt
 export ORDERER_ADMIN_TLS_PRIVATE_KEY=${PWD}/artifacts/channel/crypto-config/ordererOrganizations/example.com/orderers/orderer.example.com/tls/server.key
 
+source scripts/utils.sh
+
 # Set environment variables for the peer org
 setGlobals() {
     local USING_ORG=""
@@ -28,7 +29,7 @@ setGlobals() {
         USING_ORG="${OVERRIDE_ORG}"
     fi
 
-    infoln "Using organization ${USING_ORG}"
+    echo "Using organization ${USING_ORG}"
     if [ $USING_ORG == "Citizen" ]; then
         setGlobalsForPeer0Citizen
     elif [ $USING_ORG == "PCI" ]; then
@@ -38,7 +39,7 @@ setGlobals() {
     elif [ $USING_ORG == "MOH" ]; then
         setGlobalsForPeer0MOH
     else
-        errorln "ORG Unknown"
+        echo "ORG Unknown"
     fi
 
     if [ "$VERBOSE" == "true" ]; then
@@ -66,7 +67,7 @@ setGlobalsCLI() {
     elif [ $USING_ORG = "MOH" ]; then
         export CORE_PEER_ADDRESS=peer0.moh.example.com:10051
     else
-        errorln "ORG Unknown"
+        echo "ORG Unknown"
     fi
 }
 
